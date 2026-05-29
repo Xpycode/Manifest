@@ -12,15 +12,19 @@ A floating macOS HUD that surfaces every keyboard, mouse, scroll, and app-switch
 ## Screenshots
 
 ![Manifest expanded, streaming live input](03_Screenshots/Manifest-0-EXPANDED.png)
+
 *Live capture — every keystroke, click, scroll, and app-switch as it happens, each row stamped with the app that was frontmost and the time. Mouse rows carry the AX role of the element under the cursor (`→ Cell`) and the click point.*
 
 ![Manifest in compact mode](03_Screenshots/Manifest-0-COLLAPSED.png)
+
 *Compact mode — a slim always-on-top strip showing just the latest event, to stay out of the way during screencasts and demos*
 
 ![Manifest settings](03_Screenshots/Manifest-9-Settings.png)
+
 *Settings — placement mode (pinned / follow-pointer / follow-caret), the app version, and a one-click reveal of the diagnostic log*
 
 ![macOS Accessibility permission prompt](03_Screenshots/Manifest-2-Accessibility.png)
+
 *First run — Manifest watches system-wide input, so macOS requires Accessibility and Input Monitoring (granted once, persists across rebuilds)*
 
 ## Features
