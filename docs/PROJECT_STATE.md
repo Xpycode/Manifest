@@ -11,9 +11,10 @@
 ## Current Position
 - **Funnel:** ship
 - **Phase:** distribution
-- **Focus:** **v1.0.0 SHIPPED publicly.** Signed (Developer ID) + notarized + stapled DMG published at [github.com/Xpycode/Manifest/releases/tag/v1.0.0](https://github.com/Xpycode/Manifest/releases/tag/v1.0.0). Repo public (GPL-3.0) with README + screenshots. CLI notarization is now an operational, scripted, repeatable step (`scripts/package-dmg.sh`, doc `61`). Remaining is optional polish (Sparkle auto-update; proactive `AXElementLookup:114` Sendable fix; event-tap watchdog).
+- **Focus:** **v1.0.1 SHIPPED publicly** (latest). [github.com/Xpycode/Manifest/releases/tag/v1.0.1](https://github.com/Xpycode/Manifest/releases/tag/v1.0.1) — adds the **event-tap watchdog** (2 s main-run-loop timer that re-enables a system-disabled `CGEventTap`, fixing the "keyboard stopped registering in-app but works elsewhere" bug). v1.0.0 was the first public release. Repo public (GPL-3.0); CLI notarize→release is operational and repeatable (`scripts/package-dmg.sh`, doc `61`). Remaining is optional polish (Sparkle auto-update; proactive `AXElementLookup:114` Sendable fix).
 - **Status:** active
 - **Last updated:** 2026-05-29
+- **Current version:** 1.0.1 (build 101)
 
 ## Funnel Progress
 
@@ -22,11 +23,11 @@
 | **Define** | done | One-liner + scope locked (keys + clicks + scroll + app-switch, floating panel, persistent log + export, local + UTC timestamps) |
 | **Plan** | done | Lean on DownKeyCounter's CGEventTap pipeline; XcodeGen for project file |
 | **Build** | done | Feature-complete, polished, manual verification passed |
-| **Ship** | active | v1.0.0 notarized DMG + public GitHub release shipped |
+| **Ship** | active | v1.0.1 notarized DMG + public GitHub release (watchdog fix) |
 
 ## Phase Progress
 ```
-[###################.] 95% - v1.0.0 shipped (notarized DMG + public release); optional polish remains
+[###################.] 95% - v1.0.1 shipped (notarized DMG + public release, watchdog fix); optional polish remains
 ```
 
 | Phase | Status | Tasks |
@@ -85,13 +86,14 @@
 
 ## Next Actions
 
-**v1.0.0 is shipped publicly — no required work remaining.**
+**v1.0.1 is shipped publicly — no required work remaining.**
 
 **Optional follow-ups (deferred unless asked):**
 - Proactively fix `AXElementLookup.swift:114` `[onResult]` capture (same `@Sendable` pattern as the DiagnosticLogger fix) before the next archive flags it.
-- Event-tap **watchdog** for the "keyboard stopped capturing" symptom (tap-disabled-by-timeout) — re-enable on a timer independent of the callback.
 - **Sparkle auto-update** now that a public release feed exists.
 - Icon art refinement; tune `approachPad`; tier-2 Electron caret verification; global compact-toggle hotkey.
+
+**Done since v1.0.0:** ✓ event-tap watchdog (the "keyboard stopped capturing" fix) → shipped in v1.0.1.
 
 **Next release:** `scripts/package-dmg.sh <version>` → `gh release create` (see doc `61`).
 
@@ -104,7 +106,7 @@
 - **Release tooling:** `scripts/package-dmg.sh` + notarytool keychain profile `Manifest`; see doc `61_distribution-notarization.md`
 
 ## Resume
-Most recent: [2026-05-29 (pm)](sessions/2026-05-29.md) — **v1.0.0 SHIPPED.** Fixed a `@Sendable` capture archive-blocker in `DiagnosticLogger`; git init + push to public `Xpycode/Manifest` (GPL-3.0, README w/ icon + `03_Screenshots/`); created the missing **Developer ID Application** cert + **notarytool profile `Manifest`**; signed → notarized (Accepted) → stapled the DMG → [GitHub release v1.0.0](https://github.com/Xpycode/Manifest/releases/tag/v1.0.0). Process scripted (`scripts/package-dmg.sh`) + documented (`61_distribution-notarization.md`); permission allowlist rewritten to prefix patterns. Prior (am): `/minimums` closed 3 baseline gaps + manual verification passed.
+Most recent: [2026-05-29 (eve)](sessions/2026-05-29.md) — **v1.0.1 SHIPPED.** Added the **event-tap watchdog** (`EventTapService.swift`: 2 s `RunLoop.main`/`.common` timer → `watchdogCheck()` re-enables a system-disabled tap, logs on recovery; invalidated in `stop()`) — fixes the "keyboard stopped registering in-app, still works in Spotlight" bug that opened the session. Bumped to 1.0.1/101, archived → Developer ID export → app notarized+stapled → DMG signed+notarized+stapled → [GitHub release v1.0.1](https://github.com/Xpycode/Manifest/releases/tag/v1.0.1) (sha256 `8e8851fc…`). Prior (pm): **v1.0.0 SHIPPED** — first public release; created Developer ID cert + notarytool profile `Manifest`; scripted (`scripts/package-dmg.sh`) + doc `61`. Prior (am): `/minimums` + manual verification.
 
 ---
 *Updated by Claude. Source of truth for project position.*
