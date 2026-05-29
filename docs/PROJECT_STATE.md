@@ -9,9 +9,9 @@
 - **Started:** 2026-05-27
 
 ## Current Position
-- **Funnel:** build
-- **Phase:** implementation
-- **Focus:** **Ship-ready for personal use.** All app-minimums gaps closed (version in Preferences, `DiagnosticLogger`, app icon) and the final manual verification passed — tier-3 caret freeze, secure-input freeze, and drag-during-follow resume gate all confirmed by hand on a clean build. Polish → Ship gate closed. Remaining work is all Distribution-phase (notarization / Sparkle / DMG), parked behind "share with others?".
+- **Funnel:** ship
+- **Phase:** distribution
+- **Focus:** **v1.0.0 SHIPPED publicly.** Signed (Developer ID) + notarized + stapled DMG published at [github.com/Xpycode/Manifest/releases/tag/v1.0.0](https://github.com/Xpycode/Manifest/releases/tag/v1.0.0). Repo public (GPL-3.0) with README + screenshots. CLI notarization is now an operational, scripted, repeatable step (`scripts/package-dmg.sh`, doc `61`). Remaining is optional polish (Sparkle auto-update; proactive `AXElementLookup:114` Sendable fix; event-tap watchdog).
 - **Status:** active
 - **Last updated:** 2026-05-29
 
@@ -21,11 +21,12 @@
 |--------|--------|------|
 | **Define** | done | One-liner + scope locked (keys + clicks + scroll + app-switch, floating panel, persistent log + export, local + UTC timestamps) |
 | **Plan** | done | Lean on DownKeyCounter's CGEventTap pipeline; XcodeGen for project file |
-| **Build** | active | First vertical slice working; iterating on HUD UX |
+| **Build** | done | Feature-complete, polished, manual verification passed |
+| **Ship** | active | v1.0.0 notarized DMG + public GitHub release shipped |
 
 ## Phase Progress
 ```
-[################....] 80% - feature-complete + polished; ship-ready for personal use (Distribution deferred)
+[###################.] 95% - v1.0.0 shipped (notarized DMG + public release); optional polish remains
 ```
 
 | Phase | Status | Tasks |
@@ -34,6 +35,7 @@
 | Planning | done | ✓ Architecture mirrors DownKeyCounter |
 | Implementation | **active** | ✓ Capture pipeline + ✓ floating panel + ✓ compact mode + ✓ scroll coalescing + ✓ export + ✓ AX enrichment + ✓ own-panel filter + ✓ `isCompact` persistence + ✓ panel-position persistence + ✓ AX-PID click re-stamp + ✓ `performDrag` window drag + ✓ placement modes (pinned / followPointer / followCaret) + ✓ Settings scene + ✓ caret `statusMessage` tier-transition dedup |
 | Polish | **done** | ✓ version visible (Preferences About) + ✓ diagnostic logging (os.Logger + log file) + ✓ app icon ("Input Ripple", compiled into Assets.car) + ✓ manual verification (tier-3 caret freeze / secure-input freeze / drag-during-follow resume gate all pass) |
+| Distribution | **done** | ✓ DiagnosticLogger `@Sendable` capture fix + ✓ git init/push to `Xpycode/Manifest` (GPL-3.0) + ✓ README w/ icon + screenshots + ✓ Developer ID cert created + ✓ notarytool profile `Manifest` + ✓ signed/notarized/stapled DMG + ✓ **GitHub release v1.0.0** + ✓ `scripts/package-dmg.sh` + Directions doc `61` |
 
 ## Readiness
 
@@ -43,14 +45,15 @@
 | UI/Polish | 🟢 | Borderless panel + SwiftUI chrome; isCompact + panel position + placement mode/offset persist; real Settings scene reachable via gear button; version shown in About; "Show Diagnostic Log" button; app icon ("Input Ripple") |
 | Infrastructure | 🟢 | `DiagnosticLogger` (os.Logger + `~/Library/Application Support/Manifest/diagnostic.log`), state-not-payloads; preferences via @AppStorage; permission/export error feedback |
 | Testing | 🔶 WIP | 32 unit tests (KeyNameMapper + AXElementLookup fallback/deadline/cap + PlacementMath flip/clamp/round-trip + CaretFollower tier-transition dedup); no integration tests yet |
-| Docs | 🔶 WIP | Directions copy in place; session log started |
-| Distribution | ⚪ — | local dev only |
+| Docs | 🟢 | Directions copy in place; session logs current; new doc `61_distribution-notarization.md`; decisions logged |
+| Distribution | 🟢 v1.0.0 | Public GPL-3.0 repo + notarized DMG release; reusable `scripts/package-dmg.sh` + notarytool profile `Manifest` |
 
 ## Validation Gates
 - [x] **Define → Plan**: One-liner + scope confirmed via interview
 - [x] **Plan → Build**: Reference impl identified (DownKeyCounter)
 - [x] **Build → Ship**: First clean build + smoke capture
 - [x] **Polish → Ship**: manual verification passed (tier-3 caret freeze / secure-input freeze / drag-during-follow resume gate). App icon, version visibility, diagnostic logging done; Preferences + panel position persist; global hotkey deferred as optional. README sanity-check optional.
+- [x] **Ship → Distribute**: signed + notarized + stapled DMG; public GPL-3.0 repo; GitHub release v1.0.0 live; release process scripted + documented (`61_distribution-notarization.md`).
 
 ## Active Decisions
 - 2026-05-27: **Floating always-on-top panel** (not menu bar). NSPanel-backed `.floating` level so it survives Cmd+Tab without losing focus, ideal for screencasts/demos.
@@ -82,20 +85,26 @@
 
 ## Next Actions
 
-**Core is "feels finished" — no required work remaining for personal use.**
+**v1.0.0 is shipped publicly — no required work remaining.**
 
-**Optional polish (deferred unless asked):** refine icon art via a real image generator (current `Manifest-icon.svg` is a hand-built first pass); README sanity-check; tune `approachPad = 12 pt`; tier-2 Electron verification; global compact-toggle hotkey; defer mouse-row JSONL append until AX resolves.
+**Optional follow-ups (deferred unless asked):**
+- Proactively fix `AXElementLookup.swift:114` `[onResult]` capture (same `@Sendable` pattern as the DiagnosticLogger fix) before the next archive flags it.
+- Event-tap **watchdog** for the "keyboard stopped capturing" symptom (tap-disabled-by-timeout) — re-enable on a timer independent of the callback.
+- **Sparkle auto-update** now that a public release feed exists.
+- Icon art refinement; tune `approachPad`; tier-2 Electron caret verification; global compact-toggle hotkey.
 
-**Distribution phase (the next real milestone, gated by "share with others?"):** notarization, Sparkle auto-update, DMG packaging.
+**Next release:** `scripts/package-dmg.sh <version>` → `gh release create` (see doc `61`).
 
 ## Infrastructure
 - **Reference codebase:** `~/ProgrammingProjects/1-macOS/DownKeyCounter`
 - **Tooling:** xcodegen (homebrew), Xcode 16+, Swift 6, macOS 15+
 - **Bundle prefix:** `com.lucesumbrarum.Manifest`
-- **Team:** `FDMSRXXN73` (Personal Team — sufficient, no iCloud/CloudKit needed)
+- **Team:** `FDMSRXXN73` (paid Individual program — has Developer ID for notarized direct distribution)
+- **Repo:** github.com/Xpycode/Manifest (public, GPL-3.0)
+- **Release tooling:** `scripts/package-dmg.sh` + notarytool keychain profile `Manifest`; see doc `61_distribution-notarization.md`
 
 ## Resume
-Most recent: [2026-05-29](sessions/2026-05-29.md) — `/minimums` check closed all 3 baseline gaps (version in Preferences About via `AppInfo`, `DiagnosticLogger`, app icon "Input Ripple"); then **manual verification passed on a clean build** — tier-3 caret freeze, secure-input freeze, and drag-during-follow resume gate all confirmed by hand. **Polish → Ship gate closed; core feels finished for personal use.** Distribution (notarization / Sparkle / DMG) is the next milestone, parked behind "share with others?". Prior: [2026-05-28](sessions/2026-05-28.md) — AX-PID click re-stamp + `performDrag` drag + placement modes + statusMessage dedup + rename to Manifest complete.
+Most recent: [2026-05-29 (pm)](sessions/2026-05-29.md) — **v1.0.0 SHIPPED.** Fixed a `@Sendable` capture archive-blocker in `DiagnosticLogger`; git init + push to public `Xpycode/Manifest` (GPL-3.0, README w/ icon + `03_Screenshots/`); created the missing **Developer ID Application** cert + **notarytool profile `Manifest`**; signed → notarized (Accepted) → stapled the DMG → [GitHub release v1.0.0](https://github.com/Xpycode/Manifest/releases/tag/v1.0.0). Process scripted (`scripts/package-dmg.sh`) + documented (`61_distribution-notarization.md`); permission allowlist rewritten to prefix patterns. Prior (am): `/minimums` closed 3 baseline gaps + manual verification passed.
 
 ---
 *Updated by Claude. Source of truth for project position.*

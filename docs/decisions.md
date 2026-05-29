@@ -427,4 +427,36 @@ Uniform application across modes matters because in `followCaret` the user might
 - No About window, no `NSApplication.orderFrontStandardAboutPanel` — consistent with the menu-less `.accessory` design.
 
 ---
+
+### 2026-05-29 — License: GPL-3.0 (copyleft), not MIT
+
+**Context:** When publishing to GitHub I (Claude) initially copied an MIT `LICENSE` from the DownKeyCounter/Tachograph template. The repo had actually been created with **GPL-3.0**.
+
+**Decision:** GPL-3.0 is the chosen license. Local `LICENSE` was replaced with the GPL-3.0 text from the remote; the README badge and License section say GPL-3.0.
+
+**Rationale:** Deliberate strong copyleft — any distributed derivative must also be GPL-3.0 and ship its source, so monetization / proprietary forks aren't easy. Do **not** reuse the sibling projects' MIT template for Manifest.
+
+**Consequences:** Future releases stay GPL-3.0. The DownKeyCounter template's MIT default must be overridden for this project.
+
+---
+
+### 2026-05-29 — Direct distribution via notarized DMG from the CLI
+
+**Context:** "Share with others?" → yes. The app was already notarized+stapled (Xcode export), but shipping it as a downloadable DMG is a separate problem: a hand-built DMG is a new file that must itself be signed + notarized + stapled. The account had no usable Developer ID identity and no CLI notarization credential — both were silently handled by Xcode Organizer for previous apps.
+
+**Options Considered:**
+1. **Xcode Organizer** — what was used before. Works, but doesn't produce a DMG and hides the credentials, so it doesn't fit a scripted/repeatable CLI release.
+2. **Ship a zip of the stapled app** — needs no further notarization (staple travels in the app). Simplest, but no drag-to-Applications UX.
+3. **CLI DMG: sign → notarize → staple → gh release** (chosen) — the polished download, fully scriptable.
+
+**Decision:** Create a **Developer ID Application** cert (login keychain), store a **notarytool keychain profile `Manifest`** (ASC API key, Developer role), and run the chain via `scripts/package-dmg.sh`. v1.0.0 shipped this way: github.com/Xpycode/Manifest/releases/tag/v1.0.0.
+
+**Rationale:** A scripted CLI path makes every future release one command and keeps the credentials/cert documented (doc `61_distribution-notarization.md`) instead of locked inside Xcode's cache. Developer ID is the correct identity for notarized direct download (Apple Distribution is App-Store-only).
+
+**Consequences:**
+- New cert `Developer ID Application: GREGOR MÜLLER (FDMSRXXN73)` in login keychain; notarytool profile `Manifest` cached.
+- `scripts/package-dmg.sh` + Directions doc `61` capture the workflow and gotchas (`.p12` → login keychain not iCloud / `OSStatus -26276`; Managed cert lacks local key; App-Store certs ≠ Developer ID).
+- Distribution phase is no longer "parked" — it's an operational, repeatable step.
+
+---
 *Add decisions as they are made. Future-you will thank present-you.*
