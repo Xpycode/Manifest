@@ -1,0 +1,7 @@
+# Session Log Index
+
+| Date | Focus | Outcome |
+|------|-------|---------|
+| [2026-05-29](2026-05-29.md) | App-minimums check + close 3 baseline gaps + final manual verification | `/minimums` surfaced 3 real gaps, all closed: `AppInfo` + version in Preferences About; `DiagnosticLogger` (os.Logger + log file, state-not-payloads) wired into launch/capture/tap-disabled/persist/export; app icon ("Input Ripple" → `generate-appicon.sh` → Assets.car). Then **manual verification passed** on a clean build — tier-3 caret freeze, secure-input freeze, drag-during-follow resume gate all ✅. **Polish → Ship gate closed; core feels finished for personal use.** Build ✅, 32/32 tests ✅. |
+| [2026-05-28](2026-05-28.md) | AX-PID click re-stamp + window-drag fix + placement modes + rename to Manifest + caret dedup + rename executed | Morning: AX PID re-stamp. Afternoon: `performDrag` drag fix. Evening: placement modes + caret follow + approach-freeze. Night: icon prompts + rename plan written. Late night: `statusMessage` tier-transition dedup in `CaretFollower` (32/32 tests). Post-night: 5-wave rename executed — zero ShowInputs refs, 32/32 pass, root folder moved to `Manifest/`. |
+| [2026-05-27](2026-05-27.md) | HUD ergonomics + frontmost fix + quit polish + AX enrichment + panel-position persistence | Compact (persistent) + borderless panel + KVO frontmost + × is sole quit + AX role/title on mouse rows + own-panel clicks dropped from log + panel top-left persists across launches |

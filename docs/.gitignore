@@ -1,0 +1,32 @@
+# macOS
+.DS_Store
+
+# Archive (internal artifacts, not for distribution)
+.archive/
+
+# Local/personal files (not part of the system)
+docs-browser.html
+docs.sh
+
+# Session logs (project-specific, not template)
+sessions/*.md
+!sessions/_index.md
+
+# Syncthing temp files
+.syncthing.*.tmp
+*.sync-conflict-*
+
+# Embedding cache
+.fastembed_cache/
+
+# Serena tool cache
+.serena/
+
+# Skills managed externally by npx skills
+.claude/skills/
+.agents/
+
+# But keep Claude settings as reference
+!.claude/settings.local.json
+
+.cowork/
