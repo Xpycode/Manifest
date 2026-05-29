@@ -38,6 +38,16 @@ final class EventTapService {
     private nonisolated(unsafe) var source: CFRunLoopSource?
     private nonisolated(unsafe) var lastFlags: CGEventFlags = []
 
+    /// Belt-and-suspenders recovery for the "keyboard stopped registering in
+    /// the app but still works everywhere else" bug. The system can disable a
+    /// `.listenOnly` tap (a callback ran too long, or a security setting
+    /// toggled). The in-callback re-enable in `handle(type:event:)` only fires
+    /// if *another* event arrives — but a wedged tap delivers nothing, so
+    /// nothing triggers recovery. This timer polls `CGEvent.tapIsEnabled` on
+    /// the main run loop, independently of the callback, and re-enables a dead
+    /// tap. Scheduled in `.common` mode so it survives modal/tracking loops.
+    private var watchdog: Timer?
+
     private nonisolated let monitor: FrontmostAppMonitor
 
     private nonisolated static let modifierMask: CGEventFlags = [
@@ -82,6 +92,14 @@ final class EventTapService {
         self.source = runLoopSource
         self.lastFlags = []
 
+        // Poll every 2 s on the main run loop (same loop the tap callback runs
+        // on, so reading the run-loop-confined `tap` stays consistent).
+        let watchdog = Timer(timeInterval: 2.0, repeats: true) { [weak self] _ in
+            self?.watchdogCheck()
+        }
+        RunLoop.main.add(watchdog, forMode: .common)
+        self.watchdog = watchdog
+
         let stream = AsyncStream<InputEvent> { continuation in
             self.continuation = continuation
         }
@@ -89,6 +107,8 @@ final class EventTapService {
     }
 
     func stop() {
+        watchdog?.invalidate()
+        watchdog = nil
         if let tap {
             CGEvent.tapEnable(tap: tap, enable: false)
             CFMachPortInvalidate(tap)
@@ -184,6 +204,19 @@ final class EventTapService {
         default:
             break
         }
+    }
+
+    /// Runs on the main run loop (the timer is scheduled there). Reads the
+    /// run-loop-confined `tap` and re-enables it if the system silently
+    /// disabled it. Logs only on an actual recovery, so the diagnostic log
+    /// isn't spammed every 2 s during normal operation.
+    private nonisolated func watchdogCheck() {
+        guard let tap, !CGEvent.tapIsEnabled(tap: tap) else { return }
+        CGEvent.tapEnable(tap: tap, enable: true)
+        DiagnosticLogger.shared.log(
+            "watchdog re-enabled event tap (was disabled with no event to trigger in-callback recovery)",
+            level: .warn
+        )
     }
 
     private nonisolated func yield(_ event: InputEvent) {
