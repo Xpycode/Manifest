@@ -1,0 +1,88 @@
+# === macOS ===
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# === Xcode ===
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+xcuserdata/
+DerivedData/
+build/
+*.moved-aside
+*.pbxuser
+!default.pbxuser
+*.xcuserstate
+*.xcscmblueprint
+*.xccheckout
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM
+.build/
+
+# === Swift Package Manager ===
+.swiftpm/
+Packages/
+Package.pins
+Package.resolved
+
+# === Build Outputs ===
+# Built apps and disk images are distributed via GitHub Releases, not committed.
+*.dmg
+*.app
+*.o
+*.a
+04_Exports/**/*.app
+04_Exports/**/*.dmg
+
+# Keep the icon exports (referenced by the README) tracked:
+!04_Exports/Icon Exports/
+
+# === Debug / Profiling ===
+*.ips
+*.trace
+*.crash
+Instruments/
+
+# === Temporary / Planning Files ===
+*PLAN*.md
+*CHECKLIST*.md
+code-review*.md
+fix-plan*.md
+*-addition.md
+TODO-*.md
+
+# === Claude / AI Tools ===
+.claude/
+.serena/
+.aider*
+.gemini*
+
+# === IDE ===
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# === Secrets ===
+*.pem
+*.key
+.env
+.env.local
+.env.*.local
+credentials.json
+secrets.json
+
+# === Notarization artifacts ===
+*.p12
+notarization-*.json
+AuthKey_*.p8
+
+# Codemoot config
+.cowork.yml
